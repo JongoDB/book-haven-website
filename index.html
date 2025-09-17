@@ -22,11 +22,19 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 0;
+        }
+
         body {
             font-family: 'Calibri', 'Arial', sans-serif;
             line-height: 1.6;
             color: var(--text-dark);
             background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
         header {
@@ -113,6 +121,7 @@
             margin: 0 auto;
             padding: 2rem;
             min-height: calc(100vh - 200px);
+            padding-top: 2rem;
         }
 
         .page {
@@ -545,7 +554,6 @@
     </style>
 </head>
 <body>
-    <!-- Header with Navigation -->
     <header>
         <div class="header-container">
             <div class="logo-section">
@@ -565,20 +573,18 @@
                     Sophia Easter Egg
                 </button>
                 <nav>
-            <nav>
-                <ul>
-                    <li><a href="#home" class="nav-link active" onclick="showPage('home')">Home</a></li>
-                    <li><a href="#gallery" class="nav-link" onclick="showPage('gallery')">Gallery</a></li>
-                    <li><a href="#about" class="nav-link" onclick="showPage('about')">About Us</a></li>
-                    <li><a href="#community" class="nav-link" onclick="showPage('community')">Community Corner</a></li>
-                </ul>
-            </nav>
+                    <ul>
+                        <li><a href="#home" class="nav-link active" onclick="showPage('home')">Home</a></li>
+                        <li><a href="#gallery" class="nav-link" onclick="showPage('gallery')">Gallery</a></li>
+                        <li><a href="#about" class="nav-link" onclick="showPage('about')">About Us</a></li>
+                        <li><a href="#community" class="nav-link" onclick="showPage('community')">Community Corner</a></li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main>
-        <!-- Home Page -->
         <div id="home" class="page active">
             <section class="hero">
                 <h1>Welcome to Book Haven</h1>
@@ -633,7 +639,6 @@
             </section>
         </div>
 
-        <!-- Gallery Page -->
         <div id="gallery" class="page">
             <h1 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem; font-family: Arial, sans-serif;">Our Collection</h1>
             
@@ -650,11 +655,9 @@
             </div>
 
             <div class="products" id="products-container">
-                <!-- Products will be dynamically generated -->
             </div>
         </div>
 
-        <!-- About Page -->
         <div id="about" class="page">
             <h1 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem; font-family: Arial, sans-serif;">About Book Haven</h1>
             
@@ -731,7 +734,6 @@
             </div>
         </div>
 
-        <!-- Community Page -->
         <div id="community" class="page">
             <h1 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem; font-family: Arial, sans-serif;">Community Corner</h1>
             
@@ -799,7 +801,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-subscribe">
@@ -851,19 +852,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadProducts();
             updateCartCount();
-            
             loadFromLocalStorage();
         });
 
         function showPage(pageId) {
-            // Hide all pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
             
-            // Show selected page
             document.getElementById(pageId).classList.add('active');
             
-            // Update navigation
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => link.classList.remove('active'));
             
@@ -873,7 +870,6 @@
             }
             
             currentPage = pageId;
-            
             sessionStorage.setItem('currentPage', pageId);
         }
 
@@ -942,7 +938,6 @@
                 
                 updateCartCount();
                 saveToLocalStorage();
-                
                 showSuccessMessage(`${product.title} added to cart!`);
             }
         }
@@ -1041,17 +1036,20 @@
         }
 
         function handleSubscribe() {
-            const email = document.getElementById('newsletter-email').value;
-            if (email) {
-                const subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers') || '[]');
-                if (!subscribers.includes(email)) {
-                    subscribers.push(email);
-                    localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
-                }
-                
-                alert('Thank you for subscribing!');
-                document.getElementById('newsletter-email').value = '';
+            const email = document.getElementById('newsletter-email').value.trim();
+            if (!email) {
+                alert('Please fill out this field.');
+                return;
             }
+            
+            const subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers') || '[]');
+            if (!subscribers.includes(email)) {
+                subscribers.push(email);
+                localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
+            }
+            
+            alert('Thank you for subscribing!');
+            document.getElementById('newsletter-email').value = '';
         }
 
         function showSuccessMessage(message) {
